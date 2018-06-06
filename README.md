@@ -32,8 +32,6 @@ However, it adds enought data to be used by Object Mapping (xml, json) and Depen
 </dependency>
 ```
 
-_Note: Not yet published to maven central (you can clone and build locally)_
-
 2. Find and replace imports
 
 Find all ocurrences of `import java.beans` and replace with `import lite.beans`.
