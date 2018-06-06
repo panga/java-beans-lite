@@ -12,6 +12,7 @@
   <description>Lightweight and fast java.beans.Introspector implementation used to remove
     dependency on java.desktop module for Bean Introspection
   </description>
+  <url>https://github.com/panga/java-beans-lite</url>
 
   <licenses>
     <license>
@@ -121,6 +122,17 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.7</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
           </plugin>
         </plugins>
       </build>
