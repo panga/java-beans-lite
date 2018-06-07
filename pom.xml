@@ -6,7 +6,7 @@
 
   <groupId>com.github.panga</groupId>
   <artifactId>java-beans-lite</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
 
   <name>java-beans-lite</name>
   <description>Lightweight and fast java.beans.Introspector implementation used to remove
@@ -68,6 +68,39 @@
             </manifestEntries>
           </archive>
         </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <classifier>patch</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <finalName>${project.build.finalName}-patch</finalName>
+              <relocations>
+                <relocation>
+                  <pattern>lite.beans</pattern>
+                  <shadedPattern>java.beans</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
