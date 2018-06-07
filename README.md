@@ -20,23 +20,43 @@ The total size of this library is less than `10kb`!
 
 However, it adds enought data to be used by Object Mapping (xml, json) and Dependency Injection libraries.
 
-## How To
+## Usage
 
-1. Add Maven Dependency
+### Using as a `java.beans` replacement
+
+1. Add a Maven Dependency
 
 ```xml
 <dependency>
     <groupId>com.github.panga</groupId>
     <artifactId>java-beans-lite</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
-2. Find and replace imports
+2. Find all ocurrences of `import java.beans` and replace with `import lite.beans`.
 
-Find all ocurrences of `import java.beans` and replace with `import lite.beans`.
+### Using as a module patch (hacking JPMS)
 
-3. Done!
+1. Add a Maven Dependency or download the jar (notice the classifier)
+
+```xml
+<dependency>
+    <groupId>com.github.panga</groupId>
+    <artifactId>java-beans-lite</artifactId>
+    <version>1.0.1</version>
+    <classifier>patch</classifier>
+</dependency>
+```
+
+2. Run your application in a minimal JRE without `java.desktop` module without any change into any library using `java.beans` package:
+
+```bash
+java \
+    --patch-module java.base=java-beans-lite-1.0.1-patch.jar \
+    --add-exports java.base/java.beans=acme.mymodule \
+    --module-path target/modules --module acme.mymodule \
+```
 
 ## Contributors
 
