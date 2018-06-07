@@ -58,6 +58,8 @@ java \
     --module-path target/modules --module acme.mymodule \
 ```
 
+_See https://github.com/panga/hammock-jpms example._
+
 ## Contributors
 
 * Leonardo Zanivan <panga@apache.org>
