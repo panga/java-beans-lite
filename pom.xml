@@ -6,7 +6,7 @@
 
   <groupId>com.github.panga</groupId>
   <artifactId>java-beans-lite</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
 
   <name>java-beans-lite</name>
   <description>Lightweight and fast java.beans.Introspector implementation used to remove
