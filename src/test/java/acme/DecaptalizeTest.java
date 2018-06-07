@@ -16,6 +16,7 @@ public class DecaptalizeTest {
     @Test
     public void decaptalizeTest() {
         collector.checkThat(Introspector.decapitalize(null), nullValue());
+        collector.checkThat(Introspector.decapitalize(""), equalTo(""));
         collector.checkThat(Introspector.decapitalize("foo"), equalTo("foo"));
         collector.checkThat(Introspector.decapitalize("Foo"), equalTo("foo"));
         collector.checkThat(Introspector.decapitalize("FOO"), equalTo("FOO"));
