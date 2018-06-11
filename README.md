@@ -16,10 +16,6 @@ Reimplemented `java.beans.Introspector` class to do analysis of Java Beans in a 
 
 The initial implementation is a small subset of `Introspection` class methods, it doesn't implement the full interface.
 
-The total size of this library is less than `10kb`!
-
-However, it adds enought data to be used by Object Mapping (xml, json) and Dependency Injection libraries.
-
 ## Usage
 
 ### Using as a `java.beans` replacement
@@ -35,30 +31,6 @@ However, it adds enought data to be used by Object Mapping (xml, json) and Depen
 ```
 
 2. Find all ocurrences of `import java.beans` and replace with `import lite.beans`.
-
-### Using as a module patch (hacking JPMS)
-
-1. Add a Maven Dependency or download the jar (notice the classifier)
-
-```xml
-<dependency>
-    <groupId>com.github.panga</groupId>
-    <artifactId>java-beans-lite</artifactId>
-    <version>1.0.1</version>
-    <classifier>patch</classifier>
-</dependency>
-```
-
-2. Run your application in a minimal JRE without `java.desktop` module without any change into any library using `java.beans` package:
-
-```bash
-java \
-    --patch-module java.base=java-beans-lite-1.0.1-patch.jar \
-    --add-exports java.base/java.beans=acme.mymodule \
-    --module-path target/modules --module acme.mymodule \
-```
-
-_See https://github.com/panga/hammock-jpms example._
 
 ## Contributors
 
