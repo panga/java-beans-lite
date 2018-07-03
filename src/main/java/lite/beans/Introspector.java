@@ -1,7 +1,11 @@
 package lite.beans;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,10 +83,42 @@ public final class Introspector {
         return new String(chars);
     }
 
-    private static GenericBeanInfo _construct(Class<?> beanType, Class<?> stopType) {
-        Map<String, PropertyDescriptor> propsByName = new TreeMap<>();
+    /**
+     * Keeps properties ordered by fields found in class (which is the
+     * same as in Java code, even though not guaranteed by specification).
+     * If similarly named field not found, put to the end of list (at the
+     * level of class hierarchy) in alphabetical order.
+     */
+    static private class FieldOrderComparator implements Comparator<String> {
 
-        _introspect(beanType, stopType, propsByName);
+        private List<String> order = new ArrayList<>();
+
+        @Override
+        public int compare(String o1, String o2) {
+            int index1 = order.indexOf(o1);
+            int index2 = order.indexOf(o2);
+            if(index1 == -1) {
+                if(index2 == -1) {
+                    return o1.compareTo(o2);
+                } else {
+                    return 1;
+                }
+            }
+            return index1 - index2;
+        }
+
+        public void addFields(Field... fields) {
+            for(Field f : fields) {
+                order.add(f.getName());
+            }
+        }
+    }
+
+    private static GenericBeanInfo _construct(Class<?> beanType, Class<?> stopType) {
+        FieldOrderComparator comparator = new FieldOrderComparator();
+        TreeMap<String, PropertyDescriptor> propsByName = new TreeMap<>(comparator);
+
+        _introspect(beanType, stopType, propsByName, comparator);
 
         BeanDescriptor beanDescriptor = new BeanDescriptor(beanType);
 
@@ -96,7 +132,7 @@ public final class Introspector {
         return new GenericBeanInfo(beanDescriptor, propertyDescriptors);
     }
 
-    private static void _introspect(Class<?> currType, Class<?> stopType, Map<String, PropertyDescriptor> props) {
+    private static void _introspect(Class<?> currType, Class<?> stopType, Map<String, PropertyDescriptor> props, FieldOrderComparator comparator) {
         if (currType == null) {
             return;
         }
@@ -105,7 +141,9 @@ public final class Introspector {
             return;
         }
 
-        _introspect(currType.getSuperclass(), stopType, props);
+        _introspect(currType.getSuperclass(), stopType, props, comparator);
+
+        comparator.addFields(currType.getDeclaredFields());
 
         for (Method m : currType.getDeclaredMethods()) {
             final int flags = m.getModifiers();
@@ -158,6 +196,7 @@ public final class Introspector {
                 _prop(props, name).setWriteMethod(m);
             }
         }
+
     }
 
     private static PropertyDescriptor _prop(Map<String, PropertyDescriptor> props, String name) {

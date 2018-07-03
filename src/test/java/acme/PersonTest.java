@@ -8,10 +8,16 @@ import static org.hamcrest.CoreMatchers.nullValue;
 
 import lite.beans.BeanDescriptor;
 import lite.beans.BeanInfo;
+import lite.beans.IntrospectionException;
 import lite.beans.Introspector;
 import lite.beans.PropertyDescriptor;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -82,14 +88,30 @@ public class PersonTest {
         collector.checkThat(beanInfoCached, equalTo(beanInfo));
         collector.checkThat(beanInfoCached, not(equalTo(beanInfoNew)));
 
-        collector.checkThat(beanInfoCached.getPropertyDescriptors()[0].equals(beanInfoNew.getPropertyDescriptors()[0]),
+        // the one without excluding Object scanning has "class" at index 0
+        PropertyDescriptor nameDescriptor = beanInfoCached.getPropertyDescriptors()[1];
+        PropertyDescriptor nameDescriptor2 = beanInfoNew.getPropertyDescriptors()[0];
+
+        collector.checkThat(nameDescriptor.equals(nameDescriptor2),
             is(true));
-        collector.checkThat(beanInfoCached.getPropertyDescriptors()[0].equals(beanInfoNew.getPropertyDescriptors()[1]),
+
+
+        collector.checkThat(beanInfoCached.getPropertyDescriptors()[0].equals(beanInfoNew.getPropertyDescriptors()[0]),
             is(false));
 
-        collector.checkThat(beanInfoCached.getPropertyDescriptors()[0].hashCode(),
-            equalTo(beanInfoNew.getPropertyDescriptors()[0].hashCode()));
+        collector.checkThat(nameDescriptor.hashCode(),
+            equalTo(nameDescriptor2.hashCode()));
         collector.checkThat(beanInfoCached.getPropertyDescriptors()[0].hashCode(),
             not(equalTo(beanInfoNew.getPropertyDescriptors()[1].hashCode())));
+    }
+
+    @Test
+    public void keepTheOrderInJavaFileTest() throws IntrospectionException {
+        BeanInfo beanInfo = Introspector.getBeanInfo(Person.class, Object.class);
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        Field[] declaredFields = Person.class.getDeclaredFields();
+        for (int i = 0; i < declaredFields.length; i++) {
+            Assert.assertEquals(declaredFields[i].getName(), propertyDescriptors[i].getName());
+        }
     }
 }
