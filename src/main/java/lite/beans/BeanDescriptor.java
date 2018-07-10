@@ -1,19 +1,15 @@
 package lite.beans;
 
+import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-public final class BeanDescriptor extends FeatureDescriptor {
+public class BeanDescriptor extends FeatureDescriptor {
 
-    private final String _beanName;
-    private final WeakReference<Class<?>> _beanClass;
+    private Reference<Class<?>> _beanClass;
 
-    BeanDescriptor(Class<?> beanClass) {
-        _beanName = beanClass.getSimpleName();
+    public BeanDescriptor(Class<?> beanClass) {
+        setName(beanClass.getSimpleName());
         _beanClass = new WeakReference<Class<?>>(beanClass);
-    }
-
-    public String getName() {
-        return _beanName;
     }
 
     public Class<?> getBeanClass() {

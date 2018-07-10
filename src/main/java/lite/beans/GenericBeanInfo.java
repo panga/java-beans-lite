@@ -1,6 +1,6 @@
 package lite.beans;
 
-public final class GenericBeanInfo implements BeanInfo {
+public class GenericBeanInfo implements BeanInfo {
 
     protected final BeanDescriptor _bean;
     protected final PropertyDescriptor[] _properties;

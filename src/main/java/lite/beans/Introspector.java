@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Subset of java.beans.Introspector for inspecting bean property descriptors.
  */
-public final class Introspector {
+public class Introspector {
 
     private final static PropertyDescriptor[] EMPTY_PROPERTIES = new PropertyDescriptor[0];
 
@@ -51,6 +51,15 @@ public final class Introspector {
             BEAN_CACHE.put(beanInfoSignature, beanInfo);
         }
         return beanInfo;
+    }
+
+    public static BeanInfo getBeanInfo(Class<?> beanClass, int flags) throws IntrospectionException {
+        return getBeanInfo(beanClass);
+    }
+
+    public static BeanInfo getBeanInfo(Class<?> beanClass, Class<?> stopClass, int flags)
+        throws IntrospectionException {
+        return getBeanInfo(beanClass, stopClass);
     }
 
     private static String _beanInfoSignature(Class<?> beanClass, Class<?> stopClass) {
@@ -167,5 +176,14 @@ public final class Introspector {
             props.put(name, prop);
         }
         return prop;
+    }
+
+    static String initialUpperCase(String string) {
+        if (Character.isUpperCase(string.charAt(0))) {
+            return string;
+        }
+
+        String initial = string.substring(0, 1).toUpperCase();
+        return initial.concat(string.substring(1));
     }
 }
