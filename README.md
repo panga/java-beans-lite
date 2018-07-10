@@ -26,7 +26,7 @@ The initial implementation is a small subset of `Introspection` class methods, i
 <dependency>
     <groupId>com.github.panga</groupId>
     <artifactId>java-beans-lite</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
